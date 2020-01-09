@@ -7,7 +7,7 @@ setwd("/Users/mezzalinavankan/Documents/Astral")
 load("/Users/mezzalinavankan/Documents/Mini/Inherited/all.trees.Rdata")
 
 #Order studies by number of loci and remove study 2 
-trsize <- sapply(maximalTrs, length) #NOT WORKING THIS WHOLE THING NEEDS TO BE RE RUN. order is ordering alphabetically.
+trsize <- sapply(maximalTrs, length)
 trsize <- mixedorder(order(trsize))
 maximalTrsOrd <- maximalTrs[order(trsize)]
 maximalTrsOrd2 <- maximalTrsOrd[-1]
