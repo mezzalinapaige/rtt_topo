@@ -1,0 +1,104 @@
+
+library(phangorn)
+library(NELSI)
+library(gtools)
+
+setwd("/Users/mezzalinavankan/Documents/Astral")
+load("/Users/mezzalinavankan/Documents/Mini/Inherited/all.trees.Rdata")
+
+#Order studies by number of loci and remove study 2 
+trsize <- sapply(maximalTrs, length) #NOT WORKING THIS WHOLE THING NEEDS TO BE RE RUN. order is ordering alphabetically.
+trsize <- mixedorder(order(trsize))
+maximalTrsOrd <- maximalTrs[order(trsize)]
+maximalTrsOrd2 <- maximalTrsOrd[-1]
+trsize <- trsize[-1]
+
+#write gene trees to file, then pull from directory for Astral
+for (i in 1:length(maximalTrsOrd2)) {
+  class(maximalTrsOrd2[[i]]) <- "multiPhylo" 
+  #write.tree(maximalTrsOrd2[[i]], paste0(file = "s",i,".trs"))
+}
+tree_dir <- getwd() 
+gene_files <- dir(tree_dir, pattern= ".trs") 
+gene_files <- mixedsort(sort(gene_files))
+
+#Estimate species trees via Astral
+for (i in 1:length(gene_files)) {
+  system(paste0("java -jar astral.5.7.3.jar -i s",i,".trs -o s",i,"_species.tre"))
+}
+
+#Pull species tree files 
+species_files <- dir(tree_dir, pattern= "species.tre")
+species_files <- mixedsort(sort(species_files)) #Sort numerically, not alphabetically
+species_files <- lapply(species_files, read.tree) #Read in as tree for RF.dist
+
+#Calculate each metric using gene trees and species trees
+get_metrics <- function(tre, species_tr, study_num, study_name) {
+  snum <- study_num
+  sname <- study_name
+  mbl <- mean(tre$edge.length)
+  coeffVar_bl <- sd(tre$edge.length)/mean(tre$edge.length)
+  stemminess <- sum(tre$edge.length[which(tre$edge[,2] > Ntip(tre))], na.rm = T) / sum(tre$edge.length, na.rm = T)
+  species_distance <- RF.dist(species_tr, tre, check.labels = TRUE, normalize = TRUE)
+  rootTip_lengths <- pathnode(midpoint(tre))
+  coeffVar_rtl <- sd(rootTip_lengths$roottotippath)/mean(rootTip_lengths$roottotippath)
+  class(tre$node.label) <- "numeric"
+  mean_branchSup <- mean(tre$node.label, na.rm = TRUE)
+  return(c(snum, sname, mbl, coeffVar_bl, stemminess, coeffVar_rtl, mean_branchSup, species_distance))
+}
+
+studies <- read.csv("Inherited/studies_included.csv")
+studies <- as.data.frame(studies)
+studyRefs <- studies[,1]
+get_reference <- function(referenceList) {
+  author <- str_extract(referenceList, "(\\w+)") #the first word
+  year <- str_extract(referenceList, "(\\d+)") #the first digit
+  fullAuthorship <- str_extract(studyRefs[1], "(^\\D+)") 
+  reference <- paste(author, "et al,", year)
+}
+references <- lapply(studyRefs[-1], get_reference)
+save(references, file = "Raw_Data/references.Rdata")
+study_numberOrd <- 1:34
+
+topologicalMetrics <- list()
+for (i in 1:34) {
+  metrics <- lapply(maximalTrsOrd2[[i]], get_metrics, species_tr = species_files[[i]], study = study_numberOrd[[i]], study_name = references[[i]])
+  topologicalMetrics <- c(topologicalMetrics, metrics)
+}
+topologicalMetrics_df <- as.data.frame(do.call(rbind, lapply(topologicalMetrics, `length<-`, max(lengths(topologicalMetrics)))))
+colnames(topologicalMetrics_df) <- c("Study.Number", "Reference", "Mean.Branch.Lengths", "CoV.Branch.Lengths", "Stemminess", "CoV.RootTotip.Lengths", "Mean.Branch.Support", "Species.Distance")
+data_df <- topologicalMetrics_df
+write.csv(topologicalMetrics_df, file = "/Users/mezzalinavankan/Documents/Mini/DFs/VariablesDFRerun.csv")
+
+#This is not for github, only for when the full list of metrics was pulled.
+alldfNew <- topologicalMetrics_df %>% select(Study, Reference, RF.Distance, Mean.Branch.Lengths, CoV.Branch.Lengths, CoV.RootTotip.Lengths, Stemminess, Mean.Branch.Support)
+head(alldf)
+write.csv(alldf, file = "/Users/mezzalinavankan/Documents/Mini/DFs/keyVariablesDFRerun.csv")
+
+data_df$RF.Distance <- as.numeric(as.character(data_df$RF.Distance))
+data_df$Mean.Branch.Lengths <- as.numeric(as.character(data_df$Mean.Branch.Lengths))
+data_df$CoV.Branch.Lengths <- as.numeric(as.character(data_df$CoV.Branch.Lengths))
+data_df$CoV.RootTotip.Lengths <- as.numeric(as.character(data_df$CoV.RootTotip.Lengths))
+data_df$Stemminess <- as.numeric(as.character(data_df$Stemminess))
+data_df$Mean.Branch.Support <- as.numeric(as.character(data_df$Mean.Branch.Support))
+
+
+#Get gene distances and put into alldf
+get_GDmatrix <- function(studyTrees) {
+  pwd = path.dist(studyTrees)
+  pwdMatrix <- as.matrix(pwd)
+  return(pwdMatrix)
+}
+GDmatrix <- lapply(maximalTrsOrd2, get_GDmatrix)
+save(GDmatrix, file = "/Users/mezzalinavankan/Documents/Mini/Raw_Data/GDmatrixListRerun.Rdata")
+
+get_GDmeans <- function(pwdMatrix) {
+  diag(pwdMatrix) <- NA
+  pwdMeans <- colMeans(pwdMatrix, na.rm = TRUE)
+  return(pwdMeans)
+}
+GDMeans <- lapply(GDmatrix, get_GDmeans)
+sapply(GDMeans, length) #Check
+
+data_df$Gene.Distance=unlist(GDMeans)
+write.csv(data_df, file = "/Users/mezzalinavankan/Documents/Mini/DFs/data_dfRerun.csv")
