@@ -1,40 +1,25 @@
-
 library(lme4)
-library(rlist)
-library(reshape2)
 library(tidyverse)
-library(scales)
 library(gridExtra)
-
-setwd("/Users/mezzalinavankan/Documents/Mini")
-
-data_df <- read.csv("DFs/data_dfRerun.csv")
-load("Raw_Data/references.Rdata")
-
 
 #RUN GLMS
 
-data_df$Study <- as.numeric(as.character(data_df$Study))
+#all studies: gene distance (GD)
+GDglmLerB <- lmer(log(Gene.Distance) ~ (log(Mean.Branch.Lengths) + CoV.RootTotip.Lengths + Stemminess + Mean.Branch.Support) + (1 | Study.Number), weights = Number.of.Branches, data= data_df)
+GDglmLerT <- lmer(log(Gene.Distance) ~ (log(Mean.Branch.Lengths) + CoV.RootTotip.Lengths + Stemminess + Mean.Branch.Support) + (1 | Study.Number), weights = Number.of.Taxa, data= data_df)
+GDglmLer <- lmer(log(Gene.Distance) ~ (log(Mean.Branch.Lengths) + CoV.RootTotip.Lengths + Stemminess + Mean.Branch.Support) + (1 | Study.Number), data= data_df)
 
-#all studies: gene distance
-GDglmLer <- lmer(log(Gene.Distance) ~ (log(Mean.Branch.Lengths) + log(CoV.Branch.Lengths) + CoV.RootTotip.Lengths + Stemminess + Mean.Branch.Support) + (1 | Study.Number), data= data_df)
-
-save(GDglmLer, file = "Raw_Data/BigGDglmerRerun.Rdata")
-load("Raw_Data/BigGDglmerRerun.Rdata")
-
-#all studies: species distance
-SDglmer <- lmer(Species.Distance ~ (log(Mean.Branch.Lengths) + log(CoV.Branch.Lengths) + CoV.RootTotip.Lengths + Stemminess + Mean.Branch.Support) + (1 | Study.Number), data= data_df)
-
-save(SDglmer, file = "Raw_Data/BigSDglmerRerun.Rdata")
-load("Raw_Data/BigSDglmerRerun.Rdata")
+#all studies: species distance (SD)
+SDglmerB <- lmer(Species.Distance ~ (log(Mean.Branch.Lengths) + CoV.RootTotip.Lengths + Stemminess + Mean.Branch.Support) + (1 | Study.Number), weights = Number.of.Branches, data= data_df)
+SDglmerT <- lmer(Species.Distance ~ (log(Mean.Branch.Lengths) + CoV.RootTotip.Lengths + Stemminess + Mean.Branch.Support) + (1 | Study.Number), weights = Number.of.Taxa, data= data_df)
+SDglmer <- lmer(Species.Distance ~ (log(Mean.Branch.Lengths) + CoV.RootTotip.Lengths + Stemminess + Mean.Branch.Support) + (1 | Study.Number), data= data_df)
 
 #individual glms
-
-get_indvGDglms <- function(study) { #treelist
-  glm(log(Gene.Distance) ~ (log(Mean.Branch.Lengths) + log(CoV.Branch.Lengths) + CoV.RootTotip.Lengths + Stemminess + Mean.Branch.Support), data= study)
+get_indvGDglms <- function(study) { 
+  glm(log(Gene.Distance) ~ (log(Total.Branch.Lengths) + CoV.RootTotip.Lengths + Stemminess + Mean.Branch.Support), data= study)
 }
 get_indvSDglms <- function(study) {
-  glm(Species.Distance ~ (log(Mean.Branch.Lengths) + log(CoV.Branch.Lengths) + CoV.RootTotip.Lengths + Stemminess + Mean.Branch.Support), data= study)
+  glm(Species.Distance ~ (log(Total.Branch.Lengths) + CoV.RootTotip.Lengths + Stemminess + Mean.Branch.Support), data= study)
 }
 
 indvGDglms <- list()
@@ -46,131 +31,106 @@ for (i in 1:34) {
   indvSDglms[[(length(indvSDglms)+1)]] <- sglmi
 }
 
+#ORGANISE DATA INTO DATA FRAME
 
-save(indvGDglms, file = "Raw_Data/IndividualGDglmsRerun.Rdata")
-load("Raw_Data/IndividualGDglmsRerun.Rdata")
-
-save(indvSDglms, file = "Raw_data/IndividualSTglmsRerun.Rdata")
-
-#SET UP DATAFRAME
-
+#Get t-statistics from glm summaries
 get_tStat <- function(glm) {
   coef(summary(glm))[,"t value"]
 }
-get_pValue <- function(glm) {
-  coef(summary(glm))[,"Pr(>|t|)"] 
-}
+
+#Create data frame of t-statistics
 create_df <- function(glmslist, glm) {
+  
+  #extract t-stats from individual models
   indvglm_tstats <- lapply(glmslist, get_tStat)
-  bigglm_tstats <- get_tStat(glm)
+  
+  #extract t-stats from all study models
+  bigglm_tstats <- get_tStat(glm) #get t-stats for big model
+  
+  #Concatenate individual and all studies t-stat lists
   allTstats <- indvglm_tstats
-  allTstats[[(length(allTstats)+1)]] <- bigglm_tstats
+  allTstats[[(length(allTstats)+1)]] <- bigglm_tstats #put all t-stats into one big list
+  
+  #Create dataframe
   df <- as.data.frame(do.call(cbind, lapply(allTstats, `length<-`, max(lengths(allTstats)))))
-  rownames(df) <- c("Intercept", "Mean Branch Lengths", "CV Branch Lengths", "CV Root to Tip Lengths", "Stemminess", "Mean Branch Support")
+  rownames(df) <- c("Intercept", "Total Branch Lengths", "CV Root to Tip Lengths", "Stemminess", "Mean Branch Support")
   #df <- cbind(df, glmdf) #Bind bigmodel to df
+  
   df <- df[-1,] #Remove Intercept variable
+  
+  #Rename rows to study.number
   for (i in 1:35) {
     colnames(df)[i] <- paste0(i)
-  } #Rename rows to study.number
+  } 
+  
+  #Melt dataframe for plotting
   df$group <- row.names(df) #Put variables in group for melt transformation
   df.m <- melt(df, id.vars = "group")
   return(df.m)
 }
 
 GDTs.m <- create_df(indvGDglms, GDglmLer)
-write.csv(GDTs.m, file = "DFs/gene.distanceNewRerun.csv")
+GDTs.mT <- create_df(indvGDglms, GDglmLerT)
+GDTs.mB <- create_df(indvGDglms, GDglmLerB)
+SDTs.m <- create_df(indvSDglms, SDglmer)
+SDTs.mT <- create_df(indvSDglms, SDglmerT)
+SDTs.mB <- create_df(indvSDglms, SDglmerB)
 
-SDTs.m <- create_dfall(indvSDglms, SDglmLer)
-write.csv(SDTs.m, file = "DFs/species.distanceNewRerun.csv")
+#Re-order variables for plots 
+SDTs.m$group <- factor(SDTs.m$group, levels=unique(c("CV Root to Tip Lengths", "Total Branch Lengths", "Stemminess", "Mean Branch Support")))
+SDTs.mT$group <- factor(SDTs.mT$group, levels=unique(c("CV Root to Tip Lengths", "Total Branch Lengths", "Stemminess", "Mean Branch Support")))
+SDTs.mB$group <- factor(SDTs.mB$group, levels=unique(c("CV Root to Tip Lengths", "Total Branch Lengths", "Stemminess", "Mean Branch Support")))
+GDTs.m$group <- factor(GDTs.m$group, levels=unique(c("CV Root to Tip Lengths", "Total Branch Lengths", "Stemminess", "Mean Branch Support")))
+GDTs.mT$group <- factor(GDTs.mT$group, levels=unique(c("CV Root to Tip Lengths", "Total Branch Lengths", "Stemminess", "Mean Branch Support")))
+GDTs.mB$group <- factor(GDTs.mB$group, levels=unique(c("CV Root to Tip Lengths", "Total Branch Lengths", "Stemminess", "Mean Branch Support")))
 
-#PLOTS 
+#PLOTTING
 
-SDlplot <- ggplot(SDTs.m, aes(group, value, group = variable, color = variable)) +
-  geom_line()  +
-  geom_line(data = subset(SDTs.m, SDTs.m$variable == '35'), colour = 'grey40')  +
-  coord_cartesian(ylim = c(-50, 25)) +
-  #scale_y_continuous(breaks = round_any(seq(min(SDTs.m$value), max(SDTs.m$value), length.out = 5), 5)) + 
-  geom_hline(yintercept = 0, linetype = "dashed", show.legend = TRUE) +
-  theme_bw() +
-  scale_x_discrete(labels = function(x) str_wrap(x, width = 10)) +
-  theme(plot.title = element_text(size = 10, face = "bold")) +
-  labs(title = "A. Distance to Species Tree", x="Topological Measurement", y="T Statistic") +
-  theme(legend.position = "right", legend.text = element_text(size = 6)) +
-  guides(colour=guide_legend(override.aes=list(colour=c(hue_pal()(35)[1:34], 'grey40')))) +
-  scale_colour_discrete(name = "Study", labels=c(unlist(references), "All"))
-
-
-GDlplot <- ggplot(GDTs.m, aes(group, value, group = variable, color = variable)) +
-  geom_line()  +
-  geom_line(data = subset(GDTs.m, GDTs.m$variable == '35'), colour = 'grey40')  +
-  coord_cartesian(ylim = c(-50, 25)) +
-  #scale_y_continuous(breaks = round_any(seq(min(GDTs.m$value), max(GDTs.m$value), length.out = 5), 5)) + 
-  geom_hline(yintercept = 0, linetype = "dashed") +
-  theme_bw() +
-  scale_x_discrete(labels = function(x) str_wrap(x, width = 10)) +
-  theme(plot.title = element_text(size = 10, face = "bold")) +
-  theme(legend.position = "none") +
-  labs(title = "B. Distance to Gene Trees", x="Topological Measurement", y="T Statistic")
 
 g_legend<-function(a.gplot){
   tmp <- ggplot_gtable(ggplot_build(a.gplot))
   leg <- which(sapply(tmp$grobs, function(x) x$name) == "guide-box")
   legend <- tmp$grobs[[leg]]
   return(legend)}
-mylegend<-g_legend(SDlplot)
 
-aspectR <- 2.5
-pdf(file = "Plots/line_sameYRerun.pdf", onefile = TRUE, height = 7, width = 7*aspectR, useDingbats = FALSE)
-lineplot <- grid.arrange(arrangeGrob(SDlplot + theme(legend.position="none"),
-                                    GDlplot + theme(legend.position="none"),
-                                    nrow=1),
-                       mylegend, widths=c(70, 22))
-dev.off()
-
-bothdf <- data.frame(SDTs.m, GDTs.m)
-write.csv(bothdf, file = "DFs/both.distanceNewRerun.csv")
-#coef(lm(value ~ value.1, data = bothdf)) Not using this, instead using 1 and 0
-
-bothplot <- ggplot(bothdf, aes(value, value.1, colour = variable)) + 
-  geom_point() +
-  geom_point(data = subset(bothdf, bothdf$variable == '35'), colour = 'black') +
-  theme_bw() +
-  facet_wrap( ~ group, nrow = 1) +
-  labs(x="Distance to Gene Trees (T Statistic)", y="Distance to Species Tree (T Statistic)") +
-  geom_abline(intercept = 0, slope = 1) +
-  theme(legend.position = "right", legend.text = element_text(size = 8)) +
-  guides(colour=guide_legend(override.aes=list(colour=c(hue_pal()(35)[1:34], 'black')))) +
-  scale_colour_discrete(name = "Study", labels=c(unlist(references), "All")) 
-
-aspectR2 <- 5
-pdf(file = "Plots/vsplotRerun.pdf", onefile = TRUE, height = 4.8, width = 4.8*aspectR2, useDingbats = FALSE)
-plot(bothplot)
-dev.off()
-
-
-
-#_______________________________________________________________________________________________________________________________________
-
-#MAKE SUMMARY TABLE FOR EXPORT
-
-bind_summaryTable <- function(glms) {
-  rbind(summary(glms)$coe)
+lineplot_function <- function(df1, df2, filename) {
+  SDlplot <- ggplot(df1, aes(group, value, group = variable, color = variable)) +
+    geom_line()  +
+    geom_line(data = subset(df1, df1$variable == '35'), colour = 'grey40')  +
+    coord_cartesian(ylim = c(-55, 25)) +
+    #scale_y_continuous(breaks = round_any(seq(min(SDTs.m$value), max(SDTs.m$value), length.out = 5), 5)) + 
+    geom_hline(yintercept = 0, linetype = "dashed", show.legend = TRUE) +
+    theme_bw() +
+    scale_x_discrete(labels = function(x) str_wrap(x, width = 10)) +
+    theme(plot.title = element_text(size = 10, face = "bold")) +
+    labs(title = "A. Distance to Species Tree", x="Topological Measurement", y="T Statistic") +
+    theme(legend.position = "right", legend.text = element_text(size = 6)) +
+    guides(colour=guide_legend(override.aes=list(colour=c(hue_pal()(35)[1:34], 'grey40')))) +
+    scale_colour_discrete(name = "Study", labels=c(unlist(references), "All"))
+  
+  GDlplot <- ggplot(df2, aes(group, value, group = variable, color = variable)) +
+    geom_line()  +
+    geom_line(data = subset(df2, df2$variable == '35'), colour = 'grey40')  +
+    coord_cartesian(ylim = c(-55, 25)) +
+    #scale_y_continuous(breaks = round_any(seq(min(GDTs.m$value), max(GDTs.m$value), length.out = 5), 5)) + 
+    geom_hline(yintercept = 0, linetype = "dashed") +
+    theme_bw() +
+    scale_x_discrete(labels = function(x) str_wrap(x, width = 10)) +
+    theme(plot.title = element_text(size = 10, face = "bold")) +
+    theme(legend.position = "none") +
+    labs(title = "B. Distance to Gene Trees", x="Topological Measurement", y="T Statistic")
+  
+  mylegend<-g_legend(SDlplot)
+  
+  aspectR <- 2.5
+  pdf(file = filename, onefile = TRUE, height = 7, width = 7*aspectR, useDingbats = FALSE)
+  lineplot <- grid.arrange(arrangeGrob(SDlplot + theme(legend.position="none"),
+                                       GDlplot + theme(legend.position="none"),
+                                       nrow=1),
+                           mylegend, widths=c(70, 22))
+  dev.off()
 }
 
-SDbindIndiv <- lapply(allSTdist, bind_summaryTable) #Get summary table for individual models
-SDbindBig <- bind_summaryTable(SDglmer) #Get summary table for big model
-fakeCol <- rep(NA, each = 6)
-SDbindBig <- cbind(SDbindBig, fakeCol)
-SDbindAll <- list.append(SDbindIndiv, SDbindBig)
-SDbindAll <- SDbindAll[order(trsize)] #Order by number of loci
-SDdf <- as.data.frame(do.call(rbind, lapply(SDbindAll, `length<-`, max(lengths(SDbindAll)))))
-write.csv(SDdf, file = "/DFs/summary_SDRerun.csv")
-
-GDbindIndiv <- lapply(indvGDglmsdist, bind_summaryTable) #Get summary table for individual models
-GDbindBig <- bind_summaryTable(GDglmLer) #Get summary table for big model
-GDbindBig <- cbind(GDbindBig, fakeCol)
-GDbindAll <- list.append(GDbindIndiv, GDbindBig)
-GDbindAll <- GDbindAll[order(trsize)] #Order by number of loci
-data_df <- as.data.frame(do.call(rbind, lapply(GDbindAll, `length<-`, max(lengths(GDbindAll)))))
-write.csv(data_df, file = "/DFs/summary_GDRerun.csv")
-         
+lineplot_function(SDTs.m, GDTs.m, "Plots/line_sameNoWeights4.pdf")
+lineplot_function(SDTs.mT, GDTs.mT, "Plots/line_sameTaxaWeights4.pdf")
+lineplot_function(SDTs.mB, GDTs.mB, "Plots/line_sameBranchWeights4.pdf")
