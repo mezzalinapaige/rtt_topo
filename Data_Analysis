@@ -14,7 +14,7 @@ SDglmerB <- lmer(Species.Distance ~ (log(Mean.Branch.Lengths) + CoV.RootTotip.Le
 SDglmerT <- lmer(Species.Distance ~ (log(Mean.Branch.Lengths) + CoV.RootTotip.Lengths + Stemminess + Mean.Branch.Support) + (1 | Study.Number), weights = Number.of.Taxa, data= data_df)
 SDglmer <- lmer(Species.Distance ~ (log(Mean.Branch.Lengths) + CoV.RootTotip.Lengths + Stemminess + Mean.Branch.Support) + (1 | Study.Number), data= data_df)
 
-#individual glms
+#individual studies: species and gene distance glms
 get_indvGDglms <- function(study) { 
   glm(log(Gene.Distance) ~ (log(Total.Branch.Lengths) + CoV.RootTotip.Lengths + Stemminess + Mean.Branch.Support), data= study)
 }
@@ -86,6 +86,7 @@ GDTs.mB$group <- factor(GDTs.mB$group, levels=unique(c("CV Root to Tip Lengths",
 
 #PLOTTING
 
+#Line plot for t-statistic
 
 g_legend<-function(a.gplot){
   tmp <- ggplot_gtable(ggplot_build(a.gplot))
@@ -131,6 +132,38 @@ lineplot_function <- function(df1, df2, filename) {
   dev.off()
 }
 
-lineplot_function(SDTs.m, GDTs.m, "Plots/line_sameNoWeights4.pdf")
-lineplot_function(SDTs.mT, GDTs.mT, "Plots/line_sameTaxaWeights4.pdf")
-lineplot_function(SDTs.mB, GDTs.mB, "Plots/line_sameBranchWeights4.pdf")
+lineplot_function(SDTs.m, GDTs.m, "No_weightsPlot.pdf")
+lineplot_function(SDTs.mT, GDTs.mT, "Taxa_WeightsPlot.pdf")
+lineplot_function(SDTs.mB, GDTs.mB, "Branch_WeightsPlot.pdf")
+
+
+#Plot showing correlation between species distance and gene distance t-statistic
+
+correlationplot_function <- function(df1, df2, filename) {
+  #Add dataframes together
+  bothdf <- data.frame(df1, df2)
+  
+  #plot
+  bothplot <- ggplot(bothdf, aes(value, value.1, colour = variable)) + 
+    geom_point() +
+    geom_point(data = subset(bothdf, bothdf$variable == '35'), colour = 'black') +
+    theme_bw() +
+    geom_hline(yintercept = 0, linetype = "dashed", colour = 'grey40') +
+    geom_vline(xintercept = 0, linetype = "dashed", colour = 'grey40') +
+    facet_wrap( ~ group, nrow = 1) +
+    labs(x="Distance to Gene Trees (T Statistic)", y="Distance to Species Tree (T Statistic)") +
+    geom_abline(intercept = 0, slope = 1) +
+    theme(legend.position = "right", legend.text = element_text(size = 8)) +
+    guides(colour=guide_legend(override.aes=list(colour=c(hue_pal()(35)[1:34], 'black')))) +
+    scale_colour_discrete(name = "Study", labels=c(unlist(references), "All")) 
+  
+  #save to PDF
+  aspectR2 <- 5
+  pdf(file = filename, onefile = TRUE, height = 4.8, width = 4.8*aspectR2, useDingbats = FALSE)
+  plot(bothplot)
+  dev.off()
+}
+
+correlationplot_function(SDTs.m, GDTs.m, "Plots/vsplotNoWeights4.pdf")
+correlationplot_function(SDTs.mT, GDTs.mT, "Plots/vsplotTaxaWeights4.pdf")
+correlationplot_function(SDTs.mB, GDTs.mB, "Plots/vsplotBranchWeights4.pdf")
