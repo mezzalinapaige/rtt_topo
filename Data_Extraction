@@ -4,7 +4,7 @@ library(gtools)
 library(stringr)
 
 load("updated.all.trees.Rdata")
-load("Raw_Data/references.Rdata")
+load("references.Rdata")
 
 #Change class of tree list to multiphylo, write gene trees to file by study, then pull from directory for Astral
 
