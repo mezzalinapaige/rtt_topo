@@ -45,13 +45,13 @@ create_df <- function(glmslist, glm) {
   indvglm_tstats <- lapply(glmslist, get_tStat)
   
   #extract t-stats from all study models
-  bigglm_tstats <- get_tStat(glm) #get t-stats for big model
+  bigglm_tstats <- get_tStat(glm)
   
   #Concatenate individual and all studies t-stat lists
   allTstats <- indvglm_tstats
   allTstats[[(length(allTstats)+1)]] <- bigglm_tstats #put all t-stats into one big list
   
-  #Create dataframe
+  #Create data frame
   df <- as.data.frame(do.call(cbind, lapply(allTstats, `length<-`, max(lengths(allTstats)))))
   rownames(df) <- c("Intercept", "Total Branch Lengths", "CV Root to Tip Lengths", "Stemminess", "Mean Branch Support")
   #df <- cbind(df, glmdf) #Bind bigmodel to df
