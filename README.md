@@ -6,7 +6,7 @@ It contains the R code and tree files used in the analysis:
   
   2. updated.all.trees.Rdata: contains 36,075 gene trees from the 34 studies, estimated using above code, ordered by study from smallest to largest number of loci.
   
-  3. speciesTr_estimationRTT.R: code that estimated the species tree for each study using Astral (version 5.7.3) and updated.all.trees.Rdata.
+  3. speciesTr_estimationRTT.R: code used to estimate the species tree from each study, via Astral (version 5.7.3).
   
   3. data_extractionRTT: code to extract branch length metrics, gene distance and species distance (RF.dist).
   
