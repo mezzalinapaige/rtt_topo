@@ -7,7 +7,6 @@ load("updated.all.trees.Rdata")
 load("references.Rdata")
 
 #Change class of tree list to multiphylo, write gene trees to file by study, then pull from directory for Astral
-
 for (i in 1:length(maximalTrsOrd2)) {
   class(maximalTrsOrd2[[i]]) <- "multiPhylo" 
   write.tree(maximalTrsOrd2[[i]], paste0(file = "s",i,".trs"))
@@ -18,21 +17,18 @@ gene_files <- mixedsort(sort(gene_files))
 
 
 #Estimate species trees via Astral
-
 for (i in 1:length(gene_files)) {
   system(paste0("java -jar astral.5.7.3.jar -i s",i,".trs -o s",i,"_species.tre"))
 }
 
 
 #Pull species tree files 
-
 species_files <- dir(tree_dir, pattern= "species.tre")
 species_files <- mixedsort(sort(species_files)) #Sort numerically, not alphabetically
 species_files <- lapply(species_files, read.tree) #Read in as tree for RF.dist
 
 
 #Calculate topological variables and species distance
-
 get_metrics <- function(tre, species_tr, study_num, study_name) {
   snum <- study_num
   sname <- study_name
@@ -61,7 +57,6 @@ data_df <- topologicalMetrics_df
 
 
 #Calculate gene distances and add to data_df
-
 get_GDmatrix <- function(studyTrees) {
   pwd = path.dist(studyTrees)
   pwdMatrix <- as.matrix(pwd)
