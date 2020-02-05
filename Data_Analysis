@@ -40,6 +40,8 @@ run_indvGLMS <- function(df, study) {
   return(c(indvGDglms, indvSDglms))
 }
 
+#CREATE DATA FRAME
+
 create_df <- function(glmslist, glm) {
   #function to extract t-stat from glm summary
   get_tStat <- function(glm) {
@@ -66,6 +68,8 @@ create_df <- function(glmslist, glm) {
   df.m <- melt(df, id.vars = "group")
   return(df.m)
 }
+
+#PLOT T-STATISTICS
 
 lineplot_function <- function(df1, df2, filename, ylimitNeg) {
   #run species distance plot
@@ -138,6 +142,8 @@ correlationplot_function <- function(df1, df2, filename) {
   plot(bothplot)
   dev.off()
 }
+
+#RUN ALL FUNCTIONS
 
 run_all <- function(df) {
   #run_glms
