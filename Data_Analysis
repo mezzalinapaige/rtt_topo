@@ -1,104 +1,78 @@
-library(lme4)
-library(tidyverse)
-library(gridExtra)
+library(lme4) #for lmer
+library(tidyverse) #for plots
+library(gridExtra) #for gridarrange
+library(reshape2) #for melt 
+library(scales) #for hue_pal
+
+data_df <- read.csv("data_df2.csv")
+load("references.Rdata")
+
+data_df$Study <- as.numeric(as.character(data_df$Study)) #to run all studies glm
 
 #RUN GLMS
 
-#all studies: gene distance (GD)
-GDglmLerB <- lmer(log(Gene.Distance) ~ (log(Mean.Branch.Lengths) + CoV.RootTotip.Lengths + Stemminess + Mean.Branch.Support) + (1 | Study.Number), weights = Number.of.Branches, data= data_df)
-GDglmLerT <- lmer(log(Gene.Distance) ~ (log(Mean.Branch.Lengths) + CoV.RootTotip.Lengths + Stemminess + Mean.Branch.Support) + (1 | Study.Number), weights = Number.of.Taxa, data= data_df)
-GDglmLer <- lmer(log(Gene.Distance) ~ (log(Mean.Branch.Lengths) + CoV.RootTotip.Lengths + Stemminess + Mean.Branch.Support) + (1 | Study.Number), data= data_df)
-
-#all studies: species distance (SD)
-SDglmerB <- lmer(Species.Distance ~ (log(Mean.Branch.Lengths) + CoV.RootTotip.Lengths + Stemminess + Mean.Branch.Support) + (1 | Study.Number), weights = Number.of.Branches, data= data_df)
-SDglmerT <- lmer(Species.Distance ~ (log(Mean.Branch.Lengths) + CoV.RootTotip.Lengths + Stemminess + Mean.Branch.Support) + (1 | Study.Number), weights = Number.of.Taxa, data= data_df)
-SDglmer <- lmer(Species.Distance ~ (log(Mean.Branch.Lengths) + CoV.RootTotip.Lengths + Stemminess + Mean.Branch.Support) + (1 | Study.Number), data= data_df)
-
-#individual studies: species and gene distance glms
-get_indvGDglms <- function(study) { 
-  glm(log(Gene.Distance) ~ (log(Total.Branch.Lengths) + CoV.RootTotip.Lengths + Stemminess + Mean.Branch.Support), data= study)
-}
-get_indvSDglms <- function(study) {
-  glm(Species.Distance ~ (log(Total.Branch.Lengths) + CoV.RootTotip.Lengths + Stemminess + Mean.Branch.Support), data= study)
+run_allstudiesGLMS <- function(df) {
+  #all studies: gene distance
+  GDglmLerB <- lmer(log(Gene.Distance) ~ (log(Mean.Branch.Lengths) + CoV.RootTotip.Lengths + Stemminess + Mean.Branch.Support) + (1 | Study.Number), weights = Number.of.Branches, data= df)
+  GDglmLerT <- lmer(log(Gene.Distance) ~ (log(Mean.Branch.Lengths) + CoV.RootTotip.Lengths + Stemminess + Mean.Branch.Support) + (1 | Study.Number), weights = Number.of.Taxa, data= df)
+  GDglmLer <- lmer(log(Gene.Distance) ~ (log(Mean.Branch.Lengths) + CoV.RootTotip.Lengths + Stemminess + Mean.Branch.Support) + (1 | Study.Number), data= data_df)
+  
+  #all studies: species distance
+  SDglmLerB <- lmer(Species.Distance ~ (log(Mean.Branch.Lengths) + CoV.RootTotip.Lengths + Stemminess + Mean.Branch.Support) + (1 | Study.Number), weights = Number.of.Branches, data= df)
+  SDglmLerT <- lmer(Species.Distance ~ (log(Mean.Branch.Lengths) + CoV.RootTotip.Lengths + Stemminess + Mean.Branch.Support) + (1 | Study.Number), weights = Number.of.Taxa, data= df)
+  SDglmLer <- lmer(Species.Distance ~ (log(Mean.Branch.Lengths) + CoV.RootTotip.Lengths + Stemminess + Mean.Branch.Support) + (1 | Study.Number), data= df)
+  
+  return(c(GDglm = GDglmLer, GDglmT = GDglmLerT, GDglmB = GDglmLerB, SDglm = SDglmLer, SDglmT = SDglmLerT, SDglmB = SDglmLerB))
 }
 
-indvGDglms <- list()
-indvSDglms <- list()
-for (i in 1:34) {
-  glmi <- get_indvGDglms(study = subset(data_df, data_df$Study == i))
-  indvGDglms[[(length(indvGDglms)+1)]] <- glmi
-  sglmi <- get_indvSDglms(study = subset(data_df, data_df$Study == i))
-  indvSDglms[[(length(indvSDglms)+1)]] <- sglmi
+run_indvGLMS <- function(df, study) {
+  indvGDglms <- list()
+  indvSDglms <- list()
+  for (i in 1:34) {
+    #gene distance
+    glmi <- glm(log(Gene.Distance) ~ (log(Total.Branch.Lengths) + CoV.RootTotip.Lengths + Stemminess + Mean.Branch.Support), data = subset(df, df$Study == i))
+    indvGDglms[[(length(indvGDglms)+1)]] <- glmi
+    
+    #species distance
+    sglmi <- glm(Species.Distance ~ (log(Total.Branch.Lengths) + CoV.RootTotip.Lengths + Stemminess + Mean.Branch.Support), data= subset(df, df$Study == i))
+    indvSDglms[[(length(indvSDglms)+1)]] <- sglmi
+  }
+  return(c(indvGDglms, indvSDglms))
 }
 
-#ORGANISE DATA INTO DATA FRAME
-
-#Get t-statistics from glm summaries
-get_tStat <- function(glm) {
-  coef(summary(glm))[,"t value"]
-}
-
-#Create data frame of t-statistics
 create_df <- function(glmslist, glm) {
+  #function to extract t-stat from glm summary
+  get_tStat <- function(glm) {
+    coef(summary(glm))[,"t value"]
+  }
   
-  #extract t-stats from individual models
-  indvglm_tstats <- lapply(glmslist, get_tStat)
+  #extract t-stats from individual and all studies glms
+  indvglm_tstats <- lapply(glmslist, get_tStat) #get t-stats for individual models
+  bigglm_tstats <- get_tStat(glm) #get t-stats for big model
   
-  #extract t-stats from all study models
-  bigglm_tstats <- get_tStat(glm)
-  
-  #Concatenate individual and all studies t-stat lists
+  #concatenate indidvidual and all studies t-stats
   allTstats <- indvglm_tstats
   allTstats[[(length(allTstats)+1)]] <- bigglm_tstats #put all t-stats into one big list
   
-  #Create data frame
+  #create dataframe
   df <- as.data.frame(do.call(cbind, lapply(allTstats, `length<-`, max(lengths(allTstats)))))
   rownames(df) <- c("Intercept", "Total Branch Lengths", "CV Root to Tip Lengths", "Stemminess", "Mean Branch Support")
   #df <- cbind(df, glmdf) #Bind bigmodel to df
-  
   df <- df[-1,] #Remove Intercept variable
-  
-  #Rename rows to study.number
   for (i in 1:35) {
     colnames(df)[i] <- paste0(i)
-  } 
-  
-  #Melt dataframe for plotting
+  } #Rename rows to study.number
   df$group <- row.names(df) #Put variables in group for melt transformation
   df.m <- melt(df, id.vars = "group")
   return(df.m)
 }
 
-GDTs.m <- create_df(indvGDglms, GDglmLer)
-GDTs.mT <- create_df(indvGDglms, GDglmLerT)
-GDTs.mB <- create_df(indvGDglms, GDglmLerB)
-SDTs.m <- create_df(indvSDglms, SDglmer)
-SDTs.mT <- create_df(indvSDglms, SDglmerT)
-SDTs.mB <- create_df(indvSDglms, SDglmerB)
-
-#Re-order variables for plots 
-SDTs.m$group <- factor(SDTs.m$group, levels=unique(c("CV Root to Tip Lengths", "Total Branch Lengths", "Stemminess", "Mean Branch Support")))
-SDTs.mT$group <- factor(SDTs.mT$group, levels=unique(c("CV Root to Tip Lengths", "Total Branch Lengths", "Stemminess", "Mean Branch Support")))
-SDTs.mB$group <- factor(SDTs.mB$group, levels=unique(c("CV Root to Tip Lengths", "Total Branch Lengths", "Stemminess", "Mean Branch Support")))
-GDTs.m$group <- factor(GDTs.m$group, levels=unique(c("CV Root to Tip Lengths", "Total Branch Lengths", "Stemminess", "Mean Branch Support")))
-GDTs.mT$group <- factor(GDTs.mT$group, levels=unique(c("CV Root to Tip Lengths", "Total Branch Lengths", "Stemminess", "Mean Branch Support")))
-GDTs.mB$group <- factor(GDTs.mB$group, levels=unique(c("CV Root to Tip Lengths", "Total Branch Lengths", "Stemminess", "Mean Branch Support")))
-
-#PLOTTING
-
-#Line plot for t-statistic
-
-g_legend<-function(a.gplot){
-  tmp <- ggplot_gtable(ggplot_build(a.gplot))
-  leg <- which(sapply(tmp$grobs, function(x) x$name) == "guide-box")
-  legend <- tmp$grobs[[leg]]
-  return(legend)}
-
-lineplot_function <- function(df1, df2, filename) {
+lineplot_function <- function(df1, df2, filename, ylimitNeg) {
+  #run species distance plot
   SDlplot <- ggplot(df1, aes(group, value, group = variable, color = variable)) +
     geom_line()  +
     geom_line(data = subset(df1, df1$variable == '35'), colour = 'grey40')  +
-    coord_cartesian(ylim = c(-55, 25)) +
+    coord_cartesian(ylim = c(ylimitNeg, 25)) +
     #scale_y_continuous(breaks = round_any(seq(min(SDTs.m$value), max(SDTs.m$value), length.out = 5), 5)) + 
     geom_hline(yintercept = 0, linetype = "dashed", show.legend = TRUE) +
     theme_bw() +
@@ -109,10 +83,11 @@ lineplot_function <- function(df1, df2, filename) {
     guides(colour=guide_legend(override.aes=list(colour=c(hue_pal()(35)[1:34], 'grey40')))) +
     scale_colour_discrete(name = "Study", labels=c(unlist(references), "All"))
   
+  #run gene distance plot
   GDlplot <- ggplot(df2, aes(group, value, group = variable, color = variable)) +
     geom_line()  +
     geom_line(data = subset(df2, df2$variable == '35'), colour = 'grey40')  +
-    coord_cartesian(ylim = c(-55, 25)) +
+    coord_cartesian(ylim = c(ylimitNeg, 25)) +
     #scale_y_continuous(breaks = round_any(seq(min(GDTs.m$value), max(GDTs.m$value), length.out = 5), 5)) + 
     geom_hline(yintercept = 0, linetype = "dashed") +
     theme_bw() +
@@ -121,8 +96,15 @@ lineplot_function <- function(df1, df2, filename) {
     theme(legend.position = "none") +
     labs(title = "B. Distance to Gene Trees", x="Topological Measurement", y="T Statistic")
   
+  #extract legend for pdf
+  g_legend<-function(a.gplot){
+    tmp <- ggplot_gtable(ggplot_build(a.gplot))
+    leg <- which(sapply(tmp$grobs, function(x) x$name) == "guide-box")
+    legend <- tmp$grobs[[leg]]
+    return(legend)}
   mylegend<-g_legend(SDlplot)
   
+  #save to PDF
   aspectR <- 2.5
   pdf(file = filename, onefile = TRUE, height = 7, width = 7*aspectR, useDingbats = FALSE)
   lineplot <- grid.arrange(arrangeGrob(SDlplot + theme(legend.position="none"),
@@ -131,13 +113,6 @@ lineplot_function <- function(df1, df2, filename) {
                            mylegend, widths=c(70, 22))
   dev.off()
 }
-
-lineplot_function(SDTs.m, GDTs.m, "No_weightsPlot.pdf")
-lineplot_function(SDTs.mT, GDTs.mT, "Taxa_WeightsPlot.pdf")
-lineplot_function(SDTs.mB, GDTs.mB, "Branch_WeightsPlot.pdf")
-
-
-#Plot showing correlation between species distance and gene distance t-statistic
 
 correlationplot_function <- function(df1, df2, filename) {
   #Add dataframes together
@@ -164,6 +139,36 @@ correlationplot_function <- function(df1, df2, filename) {
   dev.off()
 }
 
-correlationplot_function(SDTs.m, GDTs.m, "Plots/vsplotNoWeights4.pdf")
-correlationplot_function(SDTs.mT, GDTs.mT, "Plots/vsplotTaxaWeights4.pdf")
-correlationplot_function(SDTs.mB, GDTs.mB, "Plots/vsplotBranchWeights4.pdf")
+run_all <- function(df) {
+  #run_glms
+  allstudiesGLM <- run_allstudiesGLMS(df)
+  allindv <- run_indvGLMS(df)
+  
+  #Create data frames
+  GD_noWeightsDF <- create_df(allindv[1:34], allstudiesGLM$GDglm)
+  GD_taxonWeightsDF <- create_df(allindv[1:34], allstudiesGLM$GDglmT)
+  GD_branchWeightsDF <- create_df(allindv[1:34], allstudiesGLM$GDglmB)
+  
+  SD_noWeightsDF <- create_df(allindv[35:68], allstudiesGLM$SDglm)
+  SD_taxonWeightsDF <- create_df(allindv[35:68], allstudiesGLM$SDglmT)
+  SD_branchWeightsDF <- create_df(allindv[35:68], allstudiesGLM$SDglmB)
+  
+  #Reorder variables for plotting
+  GD_noWeightsDF$group <- factor(GD_noWeightsDF$group, levels=unique(c("CV Root to Tip Lengths", "Total Branch Lengths", "Stemminess", "Mean Branch Support")))
+  GD_taxonWeightsDF$group <- factor(GD_taxonWeightsDF$group, levels=unique(c("CV Root to Tip Lengths", "Total Branch Lengths", "Stemminess", "Mean Branch Support")))
+  GD_branchWeightsDF$group <- factor(GD_branchWeightsDF$group, levels=unique(c("CV Root to Tip Lengths", "Total Branch Lengths", "Stemminess", "Mean Branch Support")))
+  SD_noWeightsDF$group <- factor(SD_noWeightsDF$group, levels=unique(c("CV Root to Tip Lengths", "Total Branch Lengths", "Stemminess", "Mean Branch Support")))
+  SD_taxonWeightsDF$group <- factor(SD_taxonWeightsDF$group, levels=unique(c("CV Root to Tip Lengths", "Total Branch Lengths", "Stemminess", "Mean Branch Support")))
+  SD_branchWeightsDF$group <- factor(SD_branchWeightsDF$group, levels=unique(c("CV Root to Tip Lengths", "Total Branch Lengths", "Stemminess", "Mean Branch Support")))
+  
+  #Plot graphs
+  lineplot_function(SD_noWeightsDF, GD_noWeightsDF, "Plots/line_sameNoWeightsTest.pdf", -55)
+  lineplot_function(SD_taxonWeightsDF, GD_taxonWeightsDF, "Plots/line_sameTaxaWeightsTest.pdf", -85)
+  lineplot_function(SD_branchWeightsDF, GD_branchWeightsDF, "Plots/line_sameBranchWeightsTest.pdf", -85)
+  
+  correlationplot_function(SD_noWeightsDF, GD_noWeightsDF, "Plots/vsplotNoWeightsTest.pdf")
+  correlationplot_function(SD_taxonWeightsDF, GD_taxonWeightsDF, "Plots/vsplotTaxaWeightsTest.pdf")
+  correlationplot_function(SD_branchWeightsDF, GD_branchWeightsDF, "Plots/vsplotBranchWeightsTest.pdf")
+}
+
+run_all(data_df)
