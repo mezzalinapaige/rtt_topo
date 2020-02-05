@@ -71,8 +71,10 @@ create_df <- function(glmslist, glm) {
 
 #PLOT T-STATISTICS
 
-lineplot_function <- function(df1, df2, filename, ylimitNeg) {
-  #run species distance plot
+plot_tstats <- function(df1, df2, filename1, ylimitNeg, filename2) {
+  
+  #LINE PLOT
+  #plot species distance
   SDlplot <- ggplot(df1, aes(group, value, group = variable, color = variable)) +
     geom_line()  +
     geom_line(data = subset(df1, df1$variable == '35'), colour = 'grey40')  +
@@ -86,8 +88,7 @@ lineplot_function <- function(df1, df2, filename, ylimitNeg) {
     theme(legend.position = "right", legend.text = element_text(size = 6)) +
     guides(colour=guide_legend(override.aes=list(colour=c(hue_pal()(35)[1:34], 'grey40')))) +
     scale_colour_discrete(name = "Study", labels=c(unlist(references), "All"))
-  
-  #run gene distance plot
+  #plot gene distance
   GDlplot <- ggplot(df2, aes(group, value, group = variable, color = variable)) +
     geom_line()  +
     geom_line(data = subset(df2, df2$variable == '35'), colour = 'grey40')  +
@@ -99,29 +100,25 @@ lineplot_function <- function(df1, df2, filename, ylimitNeg) {
     theme(plot.title = element_text(size = 10, face = "bold")) +
     theme(legend.position = "none") +
     labs(title = "B. Distance to Gene Trees", x="Topological Measurement", y="T Statistic")
-  
-  #extract legend for pdf
+  #Extract legend for PDF
   g_legend<-function(a.gplot){
     tmp <- ggplot_gtable(ggplot_build(a.gplot))
     leg <- which(sapply(tmp$grobs, function(x) x$name) == "guide-box")
     legend <- tmp$grobs[[leg]]
     return(legend)}
   mylegend<-g_legend(SDlplot)
-  
   #save to PDF
   aspectR <- 2.5
-  pdf(file = filename, onefile = TRUE, height = 7, width = 7*aspectR, useDingbats = FALSE)
+  pdf(file = filename1, onefile = TRUE, height = 7, width = 7*aspectR, useDingbats = FALSE)
   lineplot <- grid.arrange(arrangeGrob(SDlplot + theme(legend.position="none"),
                                        GDlplot + theme(legend.position="none"),
                                        nrow=1),
                            mylegend, widths=c(70, 22))
   dev.off()
-}
-
-correlationplot_function <- function(df1, df2, filename) {
+  
+  #POINT PLOT
   #Add dataframes together
   bothdf <- data.frame(df1, df2)
-  
   #plot
   bothplot <- ggplot(bothdf, aes(value, value.1, colour = variable)) + 
     geom_point() +
@@ -135,10 +132,9 @@ correlationplot_function <- function(df1, df2, filename) {
     theme(legend.position = "right", legend.text = element_text(size = 8)) +
     guides(colour=guide_legend(override.aes=list(colour=c(hue_pal()(35)[1:34], 'black')))) +
     scale_colour_discrete(name = "Study", labels=c(unlist(references), "All")) 
-  
   #save to PDF
   aspectR2 <- 5
-  pdf(file = filename, onefile = TRUE, height = 4.8, width = 4.8*aspectR2, useDingbats = FALSE)
+  pdf(file = filename2, onefile = TRUE, height = 4.8, width = 4.8*aspectR2, useDingbats = FALSE)
   plot(bothplot)
   dev.off()
 }
@@ -167,14 +163,10 @@ run_all <- function(df) {
   SD_taxonWeightsDF$group <- factor(SD_taxonWeightsDF$group, levels=unique(c("CV Root to Tip Lengths", "Total Branch Lengths", "Stemminess", "Mean Branch Support")))
   SD_branchWeightsDF$group <- factor(SD_branchWeightsDF$group, levels=unique(c("CV Root to Tip Lengths", "Total Branch Lengths", "Stemminess", "Mean Branch Support")))
   
-  #Plot graphs
-  lineplot_function(SD_noWeightsDF, GD_noWeightsDF, "Plots/line_sameNoWeightsTest.pdf", -55)
-  lineplot_function(SD_taxonWeightsDF, GD_taxonWeightsDF, "Plots/line_sameTaxaWeightsTest.pdf", -85)
-  lineplot_function(SD_branchWeightsDF, GD_branchWeightsDF, "Plots/line_sameBranchWeightsTest.pdf", -85)
-  
-  correlationplot_function(SD_noWeightsDF, GD_noWeightsDF, "Plots/vsplotNoWeightsTest.pdf")
-  correlationplot_function(SD_taxonWeightsDF, GD_taxonWeightsDF, "Plots/vsplotTaxaWeightsTest.pdf")
-  correlationplot_function(SD_branchWeightsDF, GD_branchWeightsDF, "Plots/vsplotBranchWeightsTest.pdf")
+  #Plot lineplots 
+  plot_tstats(SD_noWeightsDF, GD_noWeightsDF, "Plots/line_sameNoWeightsTest.pdf", -55, "Plots/vsplotNoWeightsTest.pdf")
+  plot_tstats(SD_taxonWeightsDF, GD_taxonWeightsDF, "Plots/line_sameTaxaWeightsTest.pdf", -85, "Plots/vsplotTaxaWeightsTest.pdf")
+  plot_tstats(SD_branchWeightsDF, GD_branchWeightsDF, "Plots/line_sameBranchWeightsTest.pdf", -85, "Plots/vsplotBranchWeightsTest.pdf")
 }
 
 run_all(data_df)
