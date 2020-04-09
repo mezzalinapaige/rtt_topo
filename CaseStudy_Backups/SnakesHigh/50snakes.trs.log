@@ -1,0 +1,62 @@
+
+================== ASTRAL ===================== 
+
+This is ASTRAL version 5.7.3
+Gene trees are treated as unrooted
+112 trees read from /Users/mezzalinavankan/Documents/Astral/SnakesHigh/50snakes.trs
+All output trees will be *arbitrarily* rooted at I9901_FTB554_Squamata_Colubridae_Diadophis_punctatus_seq1
+
+======== Running the main analysis
+Number of taxa: 20 (20 species)
+Taxa: [I9901_FTB554_Squamata_Colubridae_Diadophis_punctatus_seq1, I9901_FTB554_Squamata_Colubridae_Diadophis_punctatus_seq2, I9902_FTB2739_Squamata_Colubridae_Storeria_dekayi_seq1, I9911_CAS238520_Squamata_Colubridae_Storeria_storerioides_seq2, I9943_CAS184347_Squamata_Colubridae_Storeria_dekayi_seq1, I9909_CAS204799_Squamata_Colubridae_Storeria_victa_seq2, I9902_FTB2739_Squamata_Colubridae_Storeria_dekayi_seq2, I9911_CAS238520_Squamata_Colubridae_Storeria_storerioides_seq1, I9909_CAS204799_Squamata_Colubridae_Storeria_victa_seq1, I9943_CAS184347_Squamata_Colubridae_Storeria_dekayi_seq2, I9910_CAS204795_Squamata_Colubridae_Storeria_victa_seq1, I9910_CAS204795_Squamata_Colubridae_Storeria_victa_seq2, I9903_FTB718_Squamata_Colubridae_Storeria_occipitomaculata_seq1, I9903_FTB718_Squamata_Colubridae_Storeria_occipitomaculata_seq2, I9906_FTB932_Squamata_Colubridae_Storeria_occipitomaculata_seq2, I9904_FTB2002_Squamata_Colubridae_Storeria_occipitomaculata_seq1, I9906_FTB932_Squamata_Colubridae_Storeria_occipitomaculata_seq1, I9904_FTB2002_Squamata_Colubridae_Storeria_occipitomaculata_seq2, I9915_FTB594_Squamata_Colubridae_Regina_rigida_seq1, I9915_FTB594_Squamata_Colubridae_Regina_rigida_seq2]
+Taxon occupancy: {I9911_CAS238520_Squamata_Colubridae_Storeria_storerioides_seq2=112, I9911_CAS238520_Squamata_Colubridae_Storeria_storerioides_seq1=112, I9903_FTB718_Squamata_Colubridae_Storeria_occipitomaculata_seq1=112, I9903_FTB718_Squamata_Colubridae_Storeria_occipitomaculata_seq2=112, I9901_FTB554_Squamata_Colubridae_Diadophis_punctatus_seq1=112, I9902_FTB2739_Squamata_Colubridae_Storeria_dekayi_seq2=112, I9910_CAS204795_Squamata_Colubridae_Storeria_victa_seq1=112, I9901_FTB554_Squamata_Colubridae_Diadophis_punctatus_seq2=112, I9909_CAS204799_Squamata_Colubridae_Storeria_victa_seq1=112, I9915_FTB594_Squamata_Colubridae_Regina_rigida_seq1=112, I9915_FTB594_Squamata_Colubridae_Regina_rigida_seq2=112, I9909_CAS204799_Squamata_Colubridae_Storeria_victa_seq2=112, I9902_FTB2739_Squamata_Colubridae_Storeria_dekayi_seq1=112, I9910_CAS204795_Squamata_Colubridae_Storeria_victa_seq2=112, I9906_FTB932_Squamata_Colubridae_Storeria_occipitomaculata_seq1=112, I9904_FTB2002_Squamata_Colubridae_Storeria_occipitomaculata_seq1=112, I9906_FTB932_Squamata_Colubridae_Storeria_occipitomaculata_seq2=112, I9943_CAS184347_Squamata_Colubridae_Storeria_dekayi_seq2=112, I9904_FTB2002_Squamata_Colubridae_Storeria_occipitomaculata_seq2=112, I9943_CAS184347_Squamata_Colubridae_Storeria_dekayi_seq1=112}
+Number of gene trees: 112
+0 trees have missing taxa
+Calculating quartet distance matrix (for completion of X)
+Species tree distances calculated ...
+Building set of clusters (X) from gene trees 
+------------------------------
+gradient0: 965
+Number of Clusters after addition by distance: 965
+calculating extra bipartitions to be added at level 1 ...
+Adding to X using resolutions of greedy consensus ...
+Limit for sigma of degrees:550
+polytomy size limit : 7
+discarded polytomies:  [3, 3, 3, 3, 4, 7]
+Threshold 0.0:
+Threshold 0.01:
+Threshold 0.02:
+Threshold 0.05:
+Threshold 0.1:
+polytomy of size 3; rounds with additions with at least 5 support: 0; clusters: 965
+Threshold 0.2:
+polytomy of size 3; rounds with additions with at least 5 support: 0; clusters: 965
+polytomy of size 3; rounds with additions with at least 5 support: 0; clusters: 965
+Threshold 0.3333333333333333:
+polytomy of size 7; rounds with additions with at least 5 support: 0; clusters: 965
+polytomy of size 4; rounds with additions with at least 5 support: 0; clusters: 965
+polytomy of size 3; rounds with additions with at least 5 support: 0; clusters: 965
+max k is :0
+Number of Clusters after addition by greedy: 965
+gradient0 in heuristiic: 965
+partitions formed in 0.263 secs
+Dynamic Programming starting after 0.263 secs
+Using tree-based weight calculation.
+Using polytree-based weight calculation.
+Polytree max score: 542640
+Polytree building time: 0.079 seconds.
+Number of quartet trees in the gene trees: 542640
+Size of largest cluster: 20
+Greedy score: 380984
+estimationFactor: 1.4243117821220839
+Sub-optimal score: 391911
+Total Number of elements weighted: 3298
+Normalized score (portion of input quartet trees satisfied before correcting for multiple individuals): 0.7436919504643963
+Optimization score: 403557
+Optimal tree inferred in 0.638 secs.
+(I9943_CAS184347_Squamata_Colubridae_Storeria_dekayi_seq1,(I9943_CAS184347_Squamata_Colubridae_Storeria_dekayi_seq2,((I9910_CAS204795_Squamata_Colubridae_Storeria_victa_seq1,I9910_CAS204795_Squamata_Colubridae_Storeria_victa_seq2),((I9909_CAS204799_Squamata_Colubridae_Storeria_victa_seq2,I9909_CAS204799_Squamata_Colubridae_Storeria_victa_seq1),((I9902_FTB2739_Squamata_Colubridae_Storeria_dekayi_seq1,I9902_FTB2739_Squamata_Colubridae_Storeria_dekayi_seq2),(((I9901_FTB554_Squamata_Colubridae_Diadophis_punctatus_seq1,I9901_FTB554_Squamata_Colubridae_Diadophis_punctatus_seq2),(I9915_FTB594_Squamata_Colubridae_Regina_rigida_seq1,I9915_FTB594_Squamata_Colubridae_Regina_rigida_seq2)),((I9911_CAS238520_Squamata_Colubridae_Storeria_storerioides_seq2,I9911_CAS238520_Squamata_Colubridae_Storeria_storerioides_seq1),((I9903_FTB718_Squamata_Colubridae_Storeria_occipitomaculata_seq1,I9903_FTB718_Squamata_Colubridae_Storeria_occipitomaculata_seq2),((I9904_FTB2002_Squamata_Colubridae_Storeria_occipitomaculata_seq1,I9904_FTB2002_Squamata_Colubridae_Storeria_occipitomaculata_seq2),(I9906_FTB932_Squamata_Colubridae_Storeria_occipitomaculata_seq2,I9906_FTB932_Squamata_Colubridae_Storeria_occipitomaculata_seq1))))))))));
+Final quartet score is: 403557
+Final normalized quartet score is: 0.7436919504643963
+(I9901_FTB554_Squamata_Colubridae_Diadophis_punctatus_seq1,(I9901_FTB554_Squamata_Colubridae_Diadophis_punctatus_seq2,((I9915_FTB594_Squamata_Colubridae_Regina_rigida_seq1,I9915_FTB594_Squamata_Colubridae_Regina_rigida_seq2)1:2.27422986723892,(((I9911_CAS238520_Squamata_Colubridae_Storeria_storerioides_seq2,I9911_CAS238520_Squamata_Colubridae_Storeria_storerioides_seq1)1:1.9705474534406993,((I9903_FTB718_Squamata_Colubridae_Storeria_occipitomaculata_seq1,I9903_FTB718_Squamata_Colubridae_Storeria_occipitomaculata_seq2)1:0.33791132470928015,((I9904_FTB2002_Squamata_Colubridae_Storeria_occipitomaculata_seq1,I9904_FTB2002_Squamata_Colubridae_Storeria_occipitomaculata_seq2)1:0.6884568698508106,(I9906_FTB932_Squamata_Colubridae_Storeria_occipitomaculata_seq2,I9906_FTB932_Squamata_Colubridae_Storeria_occipitomaculata_seq1)1:0.22862035796051913)0.59:0.05047853556927253)1:0.9242035933183472)0.83:0.11773550498288665,((I9902_FTB2739_Squamata_Colubridae_Storeria_dekayi_seq1,I9902_FTB2739_Squamata_Colubridae_Storeria_dekayi_seq2)1:0.4281202512895587,((I9909_CAS204799_Squamata_Colubridae_Storeria_victa_seq2,I9909_CAS204799_Squamata_Colubridae_Storeria_victa_seq1)1:0.2332489589825688,((I9910_CAS204795_Squamata_Colubridae_Storeria_victa_seq1,I9910_CAS204795_Squamata_Colubridae_Storeria_victa_seq2)0.99:0.1912663093397065,(I9943_CAS184347_Squamata_Colubridae_Storeria_dekayi_seq2,I9943_CAS184347_Squamata_Colubridae_Storeria_dekayi_seq1)0.97:0.17186754136806978)0.51:0.0350165415886288)1:0.3888723379839545)1:1.606952066657392)1:0.3352561621802642)1:4.321922710604174));
+Weight calculation took 0.217079106 secs
+ASTRAL finished in 0.795 secs

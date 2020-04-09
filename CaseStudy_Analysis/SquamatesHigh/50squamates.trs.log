@@ -1,0 +1,56 @@
+
+================== ASTRAL ===================== 
+
+This is ASTRAL version 5.7.3
+Gene trees are treated as unrooted
+1443 trees read from /Users/mezzalinavankan/Documents/Astral/SquamatesHigh/50squamates.trs
+All output trees will be *arbitrarily* rooted at chrysemys_picta
+
+======== Running the main analysis
+Number of taxa: 5 (5 species)
+Taxa: [chrysemys_picta, alligator_mississippiensis, gallus_gallus, plestiodon_fasciatus, anolis_carolinensis_2]
+Taxon occupancy: {plestiodon_fasciatus=1443, anolis_carolinensis_2=1443, gallus_gallus=1443, chrysemys_picta=1443, alligator_mississippiensis=1443}
+Number of gene trees: 1443
+0 trees have missing taxa
+Calculating quartet distance matrix (for completion of X)
+Species tree distances calculated ...
+Building set of clusters (X) from gene trees 
+------------------------------
+gradient0: 31
+Number of Clusters after addition by distance: 31
+calculating extra bipartitions to be added at level 1 ...
+Adding to X using resolutions of greedy consensus ...
+Limit for sigma of degrees:175
+polytomy size limit : 3
+discarded polytomies:  []
+Threshold 0.0:
+Threshold 0.01:
+Threshold 0.02:
+Threshold 0.05:
+Threshold 0.1:
+Threshold 0.2:
+Threshold 0.3333333333333333:
+max k is :0
+Number of Clusters after addition by greedy: 31
+gradient0 in heuristiic: 31
+partitions formed in 0.143 secs
+Dynamic Programming starting after 0.143 secs
+Using tree-based weight calculation.
+Using polytree-based weight calculation.
+Polytree max score: 7215
+Polytree building time: 0.02 seconds.
+Number of quartet trees in the gene trees: 7215
+Size of largest cluster: 5
+Greedy score: 5547
+estimationFactor: 1.300703082747431
+Sub-optimal score: 5547
+Total Number of elements weighted: 32
+Normalized score (portion of input quartet trees satisfied before correcting for multiple individuals): 0.7688149688149688
+Optimization score: 5547
+Optimal tree inferred in 0.213 secs.
+(alligator_mississippiensis,(gallus_gallus,(chrysemys_picta,(plestiodon_fasciatus,anolis_carolinensis_2))));
+Final quartet score is: 5547
+Final normalized quartet score is: 0.7688149688149688
+(chrysemys_picta,((plestiodon_fasciatus,anolis_carolinensis_2)1:3.671034093793924,(gallus_gallus,alligator_mississippiensis)1:0.19010802550022401));
+Weight calculation took 0.009095436 secs
+ASTRAL finished in 0.388 secs

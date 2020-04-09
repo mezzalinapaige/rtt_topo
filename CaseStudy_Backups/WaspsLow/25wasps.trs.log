@@ -1,0 +1,61 @@
+
+================== ASTRAL ===================== 
+
+This is ASTRAL version 5.7.3
+Gene trees are treated as unrooted
+95 trees read from /Users/mezzalinavankan/Documents/Astral/WaspsLow/25wasps.trs
+All output trees will be *arbitrarily* rooted at Lithurgus_pullatus_BND1030
+
+======== Running the main analysis
+Number of taxa: 21 (21 species)
+Taxa: [Lithurgus_pullatus_BND1030, Trachusa_larreae_BND1144, Capicola_richtersveldensis_BND941, Macrotera_echinocacti_BND1092, Scrapter_heterodoxus_BND904, Caupolicana_yarrowi_BND654, Augochlorella_aurata_EX396, Dieunomia_nevadensis_BND1112, Dasypoda_visnaga_BND977, Ampulex_compressa_BND1382, Heterogyna_nocticola_BND1290, Philanthus_gibbosus_BND827, Nasonia_vitripennis_Genome, Proscolia_sp_EX568, Rhopalomutilla_sp_EX564, Mutilla_sp_EX563, Trogaspidia_sp_EX574, Ephuta_rufisquamis_EX573, Odontomutilla_sp_EX556, Chyphotes_sp_EX553, Brachycistis_timberlakei_EX440]
+Taxon occupancy: {Caupolicana_yarrowi_BND654=95, Brachycistis_timberlakei_EX440=95, Proscolia_sp_EX568=95, Mutilla_sp_EX563=95, Chyphotes_sp_EX553=95, Dasypoda_visnaga_BND977=95, Odontomutilla_sp_EX556=95, Trogaspidia_sp_EX574=95, Trachusa_larreae_BND1144=95, Lithurgus_pullatus_BND1030=95, Dieunomia_nevadensis_BND1112=95, Heterogyna_nocticola_BND1290=95, Augochlorella_aurata_EX396=95, Scrapter_heterodoxus_BND904=95, Ampulex_compressa_BND1382=95, Macrotera_echinocacti_BND1092=95, Rhopalomutilla_sp_EX564=95, Philanthus_gibbosus_BND827=95, Capicola_richtersveldensis_BND941=95, Ephuta_rufisquamis_EX573=95, Nasonia_vitripennis_Genome=95}
+Number of gene trees: 95
+0 trees have missing taxa
+Calculating quartet distance matrix (for completion of X)
+Species tree distances calculated ...
+Building set of clusters (X) from gene trees 
+------------------------------
+gradient0: 1081
+Number of Clusters after addition by distance: 1081
+calculating extra bipartitions to be added at level 1 ...
+Adding to X using resolutions of greedy consensus ...
+Limit for sigma of degrees:575
+polytomy size limit : 8
+discarded polytomies:  [3, 3, 3, 5, 8]
+Threshold 0.0:
+Threshold 0.01:
+Threshold 0.02:
+Threshold 0.05:
+Threshold 0.1:
+Threshold 0.2:
+polytomy of size 3; rounds with additions with at least 5 support: 0; clusters: 1081
+polytomy of size 3; rounds with additions with at least 5 support: 0; clusters: 1081
+Threshold 0.3333333333333333:
+polytomy of size 3; rounds with additions with at least 5 support: 0; clusters: 1081
+polytomy of size 8; rounds with additions with at least 5 support: 0; clusters: 1081
+polytomy of size 5; rounds with additions with at least 5 support: 0; clusters: 1081
+max k is :0
+Number of Clusters after addition by greedy: 1081
+gradient0 in heuristiic: 1081
+partitions formed in 0.242 secs
+Dynamic Programming starting after 0.242 secs
+Using tree-based weight calculation.
+Using polytree-based weight calculation.
+Polytree max score: 568575
+Polytree building time: 0.07 seconds.
+Number of quartet trees in the gene trees: 568575
+Size of largest cluster: 21
+Greedy score: 419631
+estimationFactor: 1.3549404119333415
+Sub-optimal score: 430924
+Total Number of elements weighted: 2710
+Normalized score (portion of input quartet trees satisfied before correcting for multiple individuals): 0.7582359407290156
+Optimization score: 431114
+Optimal tree inferred in 0.655 secs.
+(Scrapter_heterodoxus_BND904,(Caupolicana_yarrowi_BND654,((Augochlorella_aurata_EX396,Dieunomia_nevadensis_BND1112),(Macrotera_echinocacti_BND1092,((Lithurgus_pullatus_BND1030,Trachusa_larreae_BND1144),((Capicola_richtersveldensis_BND941,Dasypoda_visnaga_BND977),(Philanthus_gibbosus_BND827,(Heterogyna_nocticola_BND1290,(Ampulex_compressa_BND1382,(Proscolia_sp_EX568,(Nasonia_vitripennis_Genome,((Chyphotes_sp_EX553,Brachycistis_timberlakei_EX440),(Rhopalomutilla_sp_EX564,(Ephuta_rufisquamis_EX573,(Odontomutilla_sp_EX556,(Mutilla_sp_EX563,Trogaspidia_sp_EX574))))))))))))))));
+Final quartet score is: 431114
+Final normalized quartet score is: 0.7582359407290156
+(Lithurgus_pullatus_BND1030,(Trachusa_larreae_BND1144,(((Capicola_richtersveldensis_BND941,Dasypoda_visnaga_BND977)1:1.2026096465462275,(Philanthus_gibbosus_BND827,(Heterogyna_nocticola_BND1290,(Ampulex_compressa_BND1382,(Proscolia_sp_EX568,(Nasonia_vitripennis_Genome,((Chyphotes_sp_EX553,Brachycistis_timberlakei_EX440)0.57:0.05836712723302904,(Rhopalomutilla_sp_EX564,(Ephuta_rufisquamis_EX573,(Odontomutilla_sp_EX556,(Mutilla_sp_EX563,Trogaspidia_sp_EX574)1:1.2411123512753925)0.97:0.18637387399890226)0.99:0.21932597773820617)1:1.5830046553659451)1:0.3535890508675683)1:0.31432350736657905)1:0.43373745126134133)0.8:0.10961337341137764)0.96:0.17733401528291592)1:0.9738192485711048)0.38:0.005876608488985266,(Macrotera_echinocacti_BND1092,((Augochlorella_aurata_EX396,Dieunomia_nevadensis_BND1112)1:0.950651948002886,(Caupolicana_yarrowi_BND654,Scrapter_heterodoxus_BND904)1:0.8839605735042131)0.96:0.18037033666269287)1:0.27584761480477815)1:0.7881449091822247));
+Weight calculation took 0.264817665 secs
+ASTRAL finished in 0.812 secs

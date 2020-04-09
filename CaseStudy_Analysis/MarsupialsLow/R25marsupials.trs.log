@@ -1,0 +1,62 @@
+
+================== ASTRAL ===================== 
+
+This is ASTRAL version 5.7.3
+Gene trees are treated as unrooted
+246 trees read from /Users/mezzalinavankan/Documents/Astral/MarsupialsLow/R25marsupials.trs
+All output trees will be *arbitrarily* rooted at Peramelidae_Isoodon_obesulus
+
+======== Running the main analysis
+Number of taxa: 40 (40 species)
+Taxa: [Peramelidae_Isoodon_obesulus, Burramyidae_Burramys_parvus, Pseudochiridae_Petauroides_volans, Burramyidae_Cercartetus_nanus_northern, Acrobatidae_Acrobates_pygmaeus, Acrobatidae_Distoechurus_pennatus, Phalangeridae_Trichosurus_vulpecula, Phalangeridae_Spilocuscus_maculatus, Phalangeridae_Phalanger_carmelitae, Phalangeridae_Strigocuscus_pelengensis, Phalangeridae_Phalanger_orientalis, Potoroidae_Bettongia_penicillata, Potoroidae_Bettongia_lesueur, Potoroidae_Aepyprymnus_rufescens, Macropodidae_Dorcopsulus_vanheurni, Macropodidae_Onychogalea_fraenata, Macropodidae_Wallabia_bicolor, Hypsiprymnodontidae_Hypsiprymnodon_moschatus, Pseudochiridae_Pseudocheirus_peregrinus_north, Pseudochiridae_Pseudochirulus_forbesi, Tarsipedidae_Tarsipes_rostratus, Dasyuridae_Dasyurus_maculatus, Dasyuridae_Sarcophilus_harrisii, Dasyuridae_Phascogale_tapoatafa, Dasyuridae_Phascogale_calura, Dasyuridae_Antechinus_stuartii, Dasyuridae_Sminthopsis_macroura, Dasyuridae_Planigale_tenuirostris, Myrmecobiidae_Myrmecobius_fasciatus, Microbiotheriidae_Dromiciops_gliroides, Marmosidae_Monodelphis_domestica, Notoryctidae_Notoryctes_typhlops, Phascolarctidae_Phascolarctos_cinereus, Vombatidae_Lasiorhinus_latifrons, Vombatidae_Vombatus_ursinus, Peramelidae_Echymipera_kalubu, Peramelidae_Peroryctes_raffrayana, Peramelidae_Perameles_nasuta, Peramelidae_Perameles_gunnii, Thylacomyidae_Macrotis_lagotis]
+Taxon occupancy: {Potoroidae_Bettongia_penicillata=246, Potoroidae_Aepyprymnus_rufescens=246, Dasyuridae_Planigale_tenuirostris=246, Phalangeridae_Trichosurus_vulpecula=246, Peramelidae_Echymipera_kalubu=246, Dasyuridae_Phascogale_tapoatafa=246, Phalangeridae_Spilocuscus_maculatus=246, Tarsipedidae_Tarsipes_rostratus=246, Pseudochiridae_Petauroides_volans=246, Vombatidae_Vombatus_ursinus=246, Phalangeridae_Phalanger_carmelitae=246, Phascolarctidae_Phascolarctos_cinereus=246, Peramelidae_Peroryctes_raffrayana=246, Peramelidae_Perameles_gunnii=246, Marmosidae_Monodelphis_domestica=246, Thylacomyidae_Macrotis_lagotis=246, Dasyuridae_Sminthopsis_macroura=246, Acrobatidae_Distoechurus_pennatus=246, Macropodidae_Dorcopsulus_vanheurni=246, Hypsiprymnodontidae_Hypsiprymnodon_moschatus=246, Dasyuridae_Sarcophilus_harrisii=246, Dasyuridae_Dasyurus_maculatus=246, Dasyuridae_Phascogale_calura=246, Burramyidae_Burramys_parvus=246, Macropodidae_Onychogalea_fraenata=246, Pseudochiridae_Pseudocheirus_peregrinus_north=246, Phalangeridae_Phalanger_orientalis=246, Potoroidae_Bettongia_lesueur=246, Microbiotheriidae_Dromiciops_gliroides=246, Phalangeridae_Strigocuscus_pelengensis=246, Dasyuridae_Antechinus_stuartii=246, Pseudochiridae_Pseudochirulus_forbesi=246, Macropodidae_Wallabia_bicolor=246, Peramelidae_Perameles_nasuta=246, Acrobatidae_Acrobates_pygmaeus=246, Myrmecobiidae_Myrmecobius_fasciatus=246, Vombatidae_Lasiorhinus_latifrons=246, Notoryctidae_Notoryctes_typhlops=246, Peramelidae_Isoodon_obesulus=246, Burramyidae_Cercartetus_nanus_northern=246}
+Number of gene trees: 246
+0 trees have missing taxa
+Calculating quartet distance matrix (for completion of X)
+Species tree distances calculated ...
+Building set of clusters (X) from gene trees 
+------------------------------
+gradient0: 2623
+Number of Clusters after addition by distance: 2623
+calculating extra bipartitions to be added at level 1 ...
+Adding to X using resolutions of greedy consensus ...
+Limit for sigma of degrees:1050
+polytomy size limit : 5
+discarded polytomies:  [3, 3, 3, 3, 4, 5]
+Threshold 0.0:
+Threshold 0.01:
+Threshold 0.02:
+Threshold 0.05:
+Threshold 0.1:
+Threshold 0.2:
+polytomy of size 3; rounds with additions with at least 5 support: 0; clusters: 2623
+polytomy of size 3; rounds with additions with at least 5 support: 0; clusters: 2623
+Threshold 0.3333333333333333:
+polytomy of size 3; rounds with additions with at least 5 support: 0; clusters: 2623
+polytomy of size 3; rounds with additions with at least 5 support: 0; clusters: 2623
+polytomy of size 4; rounds with additions with at least 5 support: 0; clusters: 2623
+polytomy of size 5; rounds with additions with at least 5 support: 0; clusters: 2623
+max k is :0
+Number of Clusters after addition by greedy: 2623
+gradient0 in heuristiic: 2623
+partitions formed in 0.798 secs
+Dynamic Programming starting after 0.798 secs
+Using tree-based weight calculation.
+Using polytree-based weight calculation.
+Polytree max score: 22481940
+Polytree building time: 0.072 seconds.
+Number of quartet trees in the gene trees: 22481940
+Size of largest cluster: 40
+Greedy score: 15896987
+estimationFactor: 1.4142264820371306
+Sub-optimal score: 16979365
+Total Number of elements weighted: 6446
+Normalized score (portion of input quartet trees satisfied before correcting for multiple individuals): 0.7888800966464637
+Optimization score: 17735555
+Optimal tree inferred in 1.549 secs.
+(Peramelidae_Peroryctes_raffrayana,(Peramelidae_Echymipera_kalubu,((Peramelidae_Isoodon_obesulus,(Peramelidae_Perameles_nasuta,Peramelidae_Perameles_gunnii)),(Thylacomyidae_Macrotis_lagotis,(Notoryctidae_Notoryctes_typhlops,((Myrmecobiidae_Myrmecobius_fasciatus,((Dasyuridae_Sminthopsis_macroura,Dasyuridae_Planigale_tenuirostris),((Dasyuridae_Dasyurus_maculatus,Dasyuridae_Sarcophilus_harrisii),(Dasyuridae_Antechinus_stuartii,(Dasyuridae_Phascogale_tapoatafa,Dasyuridae_Phascogale_calura))))),((Microbiotheriidae_Dromiciops_gliroides,Marmosidae_Monodelphis_domestica),((Phascolarctidae_Phascolarctos_cinereus,(Vombatidae_Lasiorhinus_latifrons,Vombatidae_Vombatus_ursinus)),(((Acrobatidae_Acrobates_pygmaeus,Acrobatidae_Distoechurus_pennatus),(Tarsipedidae_Tarsipes_rostratus,(Pseudochiridae_Petauroides_volans,(Pseudochiridae_Pseudocheirus_peregrinus_north,Pseudochiridae_Pseudochirulus_forbesi)))),((Hypsiprymnodontidae_Hypsiprymnodon_moschatus,((Potoroidae_Aepyprymnus_rufescens,(Potoroidae_Bettongia_penicillata,Potoroidae_Bettongia_lesueur)),(Macropodidae_Dorcopsulus_vanheurni,(Macropodidae_Onychogalea_fraenata,Macropodidae_Wallabia_bicolor)))),((Burramyidae_Burramys_parvus,Burramyidae_Cercartetus_nanus_northern),(Phalangeridae_Trichosurus_vulpecula,(Phalangeridae_Spilocuscus_maculatus,(Phalangeridae_Strigocuscus_pelengensis,(Phalangeridae_Phalanger_carmelitae,Phalangeridae_Phalanger_orientalis)))))))))))))));
+Final quartet score is: 17735555
+Final normalized quartet score is: 0.7888800966464637
+(Peramelidae_Isoodon_obesulus,((Peramelidae_Perameles_nasuta,Peramelidae_Perameles_gunnii)1:1.6016990324569504,((Thylacomyidae_Macrotis_lagotis,(Notoryctidae_Notoryctes_typhlops,((Myrmecobiidae_Myrmecobius_fasciatus,((Dasyuridae_Sminthopsis_macroura,Dasyuridae_Planigale_tenuirostris)1:0.6346769052213436,((Dasyuridae_Dasyurus_maculatus,Dasyuridae_Sarcophilus_harrisii)1:1.5742069960566807,(Dasyuridae_Antechinus_stuartii,(Dasyuridae_Phascogale_tapoatafa,Dasyuridae_Phascogale_calura)1:1.2071510633441338)1:1.1179861472856483)1:0.9374929395247574)1:1.274670605824042)1:2.986733800306708,((Microbiotheriidae_Dromiciops_gliroides,Marmosidae_Monodelphis_domestica)0.98:0.12158801228291301,((Phascolarctidae_Phascolarctos_cinereus,(Vombatidae_Lasiorhinus_latifrons,Vombatidae_Vombatus_ursinus)1:2.3958730274176023)1:1.7886148592816966,(((Acrobatidae_Acrobates_pygmaeus,Acrobatidae_Distoechurus_pennatus)1:1.4294857954599598,(Tarsipedidae_Tarsipes_rostratus,(Pseudochiridae_Petauroides_volans,(Pseudochiridae_Pseudocheirus_peregrinus_north,Pseudochiridae_Pseudochirulus_forbesi)1:1.4734748578417198)1:1.4873904779912608)1:0.6740989855892509)1:0.662401811738739,((Hypsiprymnodontidae_Hypsiprymnodon_moschatus,((Potoroidae_Aepyprymnus_rufescens,(Potoroidae_Bettongia_penicillata,Potoroidae_Bettongia_lesueur)1:1.5424165640391927)1:1.4707326802664649,(Macropodidae_Dorcopsulus_vanheurni,(Macropodidae_Onychogalea_fraenata,Macropodidae_Wallabia_bicolor)0.45:0.02638734031327021)1:1.2789116000812957)1:1.6062939619441328)1:1.8683739939075252,((Burramyidae_Burramys_parvus,Burramyidae_Cercartetus_nanus_northern)1:0.7157789810201434,(Phalangeridae_Trichosurus_vulpecula,(Phalangeridae_Spilocuscus_maculatus,(Phalangeridae_Strigocuscus_pelengensis,(Phalangeridae_Phalanger_carmelitae,Phalangeridae_Phalanger_orientalis)1:1.1774111045775295)0.86:0.07566633307373745)1:1.130402033366975)1:2.1941698073412614)1:0.29177461040706565)0.4:0.011127115697214278)1:0.529334987052485)1:0.7680787036144792)0.73:0.05255786959454487)1:0.18531794431664897)1:3.244788356818988)1:1.7250316043719545,(Peramelidae_Echymipera_kalubu,Peramelidae_Peroryctes_raffrayana)1:0.4063909269452698)1:1.3698314315843272));
+Weight calculation took 0.520282863 secs
+ASTRAL finished in 1.983 secs
